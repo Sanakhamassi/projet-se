@@ -46,7 +46,7 @@ p=l;
         nb=nb+1;
         p = p->suivant;
     } 
-    printf("%d",nb);
+    
     return nb;
 } 
 void sana(Liste l)

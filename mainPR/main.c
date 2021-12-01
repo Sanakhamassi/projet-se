@@ -44,13 +44,7 @@ void ls(const char *dirname)
 
     entity = readdir(dir);
   }
-  for (int k = 1; k <= j; k++)
-  {
-    if (tab[k] != NULL)
-    {
-      printf("%s\n", tab[k]);
-    }
-  }
+  
   closedir(dir);
 }
 int main(int argc, char *argv[])

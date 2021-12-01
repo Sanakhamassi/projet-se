@@ -1,133 +1,108 @@
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include "../mainPR/traitement.h"
-void RR_calculate(Liste l)
-{
-  Liste temp, p, pos;
-  PROCESS pr;
-  int len;
-  unsigned int curr_time;
-int i=0;
-  int q = 2;
-  len = NbrEmt(l); 
-  
-  /* Dynamically allocate an array to store the remaining execution time for each process */
-  int *remain_exection_time = (int *)malloc(sizeof(int) * len);
-  /* Dynamically allocate an array to use to check response times */
-  int *calc_response_time = (int *)malloc(sizeof(int) * len);
-  //TRIER MA LISTE CHAINÉE SELON DATE D'ARRIVÉ
-  if (l != NULL) //tester si ma liste est vide
-  {
-    for (temp = l; temp!= NULL; temp = temp->suivant)
-    {
-      
-        remain_exection_time[i] = temp->proc.dureeExecution;
-        // Initialize the response time calculation check array
-        calc_response_time[i] = 0; 
-        printf("%d",remain_exection_time[i]);
-     
-    } 
-    i++;
-  } 
-  /* Repeat until all processes are complete */
-    // Initialize check variable
-    int check = 1;
-  while (check)
-  {
-    if (l != NULL) //tester si ma liste est vide
-    {
-      for (temp = l; temp->suivant != NULL; temp = temp->suivant)
-      {
-          if (remain_exection_time[i] > 0)
-          {
-            // Handle the check variable FALSE
-            check = 0;
-
-            /* If the response time has not yet been calculated */
-            if (calc_response_time[i] == 0)
-            {
-              // Calculate response time and save
-              temp->proc.response_time = curr_time - temp->proc.TA;
-              // Process response time calculation
-              calc_response_time[i] = 1;
-            }
-            /* If the remaining time is greater than the time quota */
-            if (remain_exection_time[i] > q)
-            {
-              curr_time += q;
-              // increment by the current time time quota
-              remain_exection_time[i] -= q;
-              // Decrease the remaining time of the currently running process
-            }
-
-            /* If the remaining time is less than the time quota */
-            else
-            {
-              curr_time += remain_exection_time[i];
-              // Increase by the remaining time of the current time
-              temp->proc.TAttente = curr_time - temp->proc.dureeExecution;
-              // Calculate wait time
-              remain_exection_time[i] = 0;
-              // change remaining time to 0
-            }
-          }
-        }
-i++;
-        /* When all processes are complete */
-        if (check == 1)
-          break;
-        // Escape the infinite loop
-      }
-    }
-
-    //free(remain_exection_time);
-  }
 
 void RR(Liste l)
 {
-    int i;
-    // Declare the variable to be used in the loop
-    int total_waiting_time = 0;
-    // Declare and initialize a variable to store the total wait time
-    int total_turnaround_time = 0;
-    // Declare and initialize a variable to store the total turnaround time
-    int total_response_time = 0;
-    // Declare and initialize a variable to store the total response time
-    Liste temp, p;
-    PROCESS pr;
+  Liste temp, p, pos;
+  PROCESS pr;
+  int i = 0, j = 0;
+  int curr_time = 0;
+  int q;
+  int nb = NbrEmt(l);
+  int *Te_restant = (int *)malloc(sizeof(int) * nb);
+  PROCESS permut;
 
-    // Sort by arrival time by calling the merge_sort_by_arrive_time function
-    if (l != NULL) //tester si ma liste est vide
+  //tri
+  if (l != NULL) //tester si ma liste est vide
+  {
+    for (temp = l; temp->suivant != NULL; temp = temp->suivant)
     {
-        for (temp = l; temp->suivant != NULL; temp = temp->suivant)
+      for (p = temp->suivant; p != NULL; p = p->suivant)
+      {
+        if (p->proc.TA < temp->proc.TA)
         {
-            for (p = temp->suivant; p != NULL; p = p->suivant)
+          pr = p->proc;
+          p->proc = temp->proc;
+          temp->proc = pr;
+        }
+      }
+    }
+  }
+
+  //calcul
+  if (l != NULL) //tester si ma liste est vide
+  {
+    for (temp = l; temp != NULL; temp = temp->suivant)
+    {
+      Te_restant[i] = temp->proc.dureeExecution;
+      i++;
+    }
+  }
+  for (int k = 0; k < nb; k++)
+  {
+    printf("%d", Te_restant[k]);
+  }
+  printf("\n");
+
+  printf("donner le quantum : \n");
+  scanf("%d", &q);
+  printf("\n");
+  /*Afficher l'ordonnancement appliqué*/
+  printf("Ordonnancement RR\n");
+  printf("\n");
+  /*Afficher la date d'arrivee, le temps d'execution et la priorité de chaque processus*/
+  printf("Processus\t Ta\t Te\t Pr\n");
+  if (l != NULL) //tester si ma liste est vide
+  {
+
+    for (temp = l; temp != NULL; temp = temp->suivant)
+    {
+      printf("%s\t\t %ums \t %ums\t %u\n", temp->proc.name, temp->proc.TA, temp->proc.dureeExecution, temp->proc.priorite);
+    }
+  }
+
+  printf("\n");
+  /*afficher lA DATE DE FIN D'EXECUTION DE CHAQUE  processuss*/
+  printf("****date de debut et de fin de chasue processus selon leur temps d'execution****\n");
+  printf("\n");
+  printf("Processus\t Tdeb\t Tfin\n");
+
+  while (1)
+  {
+    int termine = 1; //indique si les processus ont terminé ou non
+    if (l != NULL)   //tester si ma liste est vide
+    {
+     int k;
+        for (temp = l ,k = 0; temp != NULL,k < nb;k++, temp = temp->suivant)
+        
+          {
+
+            if ((Te_restant[k] > 0) && (temp->proc.TA <= curr_time))
             {
-                if (p->proc.TA < temp->proc.TA)
-                {
-                    pr = p->proc;
-                    p->proc = temp->proc;
-                    temp->proc = pr;
-                }
+              termine = 0;
+
+              if (Te_restant[k] > q)
+              {
+                curr_time += q;
+                Te_restant[k] -= q;
+                printf("%s\t\t %dms --> %dms\t\n", temp->proc.name, curr_time - q, curr_time);
+              }
+
+              else
+              {
+                curr_time += Te_restant[k];
+                temp->proc.TAttente = curr_time - temp->proc.dureeExecution;
+
+                printf("%s\t\t %dms --> %dms\t\n", temp->proc.name, curr_time - Te_restant[k], curr_time);
+                Te_restant[k] = 0;
+              }
             }
-        }
+          }
+        
+      if (termine == 1)
+        break;
     }
-
-    // Calculate process time by calling sjf_calculate_time function
-    RR_calculate(l);
-
-    printf("\t RR Scheduling Algorithms\n\n");
-
-    //quick_sort_by_return_time(p, len);
-    // Sort by return time by calling quick_sort_by_return_time function
-
-    printf("Nom Processus \t\tTemps D'arrivée  \t Durée d'éxecution \t  \t Temps d'attente \t Temps fin\t\n");
-    if (l != NULL) //tester si ma liste est vide
-    {
-        for (temp = l; temp != NULL; temp = temp->suivant)
-        {
-//printf("%d ",temp->proc.completed);
-            printf("Processus: %s\t\t %ums \t\t\t %ums \t\t\t\t %ums \t\t\t\t %u ms\n", temp->proc.name, temp->proc.TA,temp->proc.dureeExecution, temp->proc.TAttente, temp->proc.TFin);
-        }
-    }
+  }
+  free(Te_restant);
 }
