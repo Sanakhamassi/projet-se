@@ -23,19 +23,12 @@ void Sjf_Calculate(Liste l)
                 /* If the process has already been completed */
                 if (p->proc.completed == 1)
                     continue;
-                // go to next loop
-
-                /* If the process has not yet completed */
+               
                 else
                 {
                     min = p->proc;
                 }
-                /*  if (p->proc.dureeExecution < temp->proc.dureeExecution)
-                {
-                    pr = p->proc;
-                    p->proc = temp->proc;
-                    temp->proc = pr;
-                }*/
+                
             }
 
             for (p = l; p != NULL; p = p->suivant)
@@ -82,13 +75,7 @@ void SJF(Liste l)
 
 {
 int i;
-// Declare the variable to be used in the loop
-int total_waiting_time = 0;
-// Declare and initialize a variable to store the total wait time
-int total_turnaround_time = 0;
-// Declare and initialize a variable to store the total turnaround time
-int total_response_time = 0;
-// Declare and initialize a variable to store the total response time
+
   Liste temp, p;
     PROCESS pr;
 
@@ -123,19 +110,11 @@ Sjf_Calculate(l);
 temp->proc.response_time = temp->proc.TAttente;
 // save the response time of the process
 
-total_waiting_time += temp->proc.TAttente;
-// increase total wait time
-total_turnaround_time += temp->proc.turnaround_time;
-// Increase total turnaround time
-total_response_time += temp->proc.response_time;
-// increase total response time 
         }
     }
 
 printf("\t SJF Scheduling Algorithms\n\n");
 
-//quick_sort_by_return_time(p, len);
-// Sort by return time by calling quick_sort_by_return_time function
 
      printf("Nom Processus \t\tTemps D'arrivée  \t Durée d'éxecution \t  \t Temps d'attente \t Temps dans le processus \t Temps fin\t\n");
     if (l != NULL) //tester si ma liste est vide

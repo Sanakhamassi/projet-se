@@ -5,7 +5,8 @@
 //#include "traitement.h"
 //#include "../algorithm/fifo.h"
 //#include "../algorithm/SJF.h"
-#include "../algorithm/RR.h"
+//#include "../algorithm/RR.h" 
+#include "../algorithm/priority.h"
 char **tab = NULL;
 int i = 1;
 void ls(const char *dirname)
@@ -61,7 +62,7 @@ int main(int argc, char *argv[])
     //printf("%d",k);
     if (choix == k)
     {
-      RR(mesProc);
+      Priority(mesProc);
     }
   }
   return 0;
