@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include <stddef.h>
+#include <stddef.h> 
+
+#include <errno.h>
 #define MAX_BUFFER_SIZE 1000
 typedef struct PROCESS PROCESS;
 typedef struct Element Element;
@@ -49,47 +51,18 @@ p=l;
     
     return nb;
 } 
-void sana(Liste l)
-{  
-    unsigned int fin=0;
-    Liste temp,p;   
-    PROCESS pr;
-    //TRIER MA LISTE CHAINÉE SELON DATE D'ARRIVÉ 
-    if(l!=NULL) //tester si ma lste est vide
-    {
-for(temp=l;temp->suivant!=NULL;temp=temp->suivant) 
-{
-    for(p=temp->suivant;p!=NULL;p=p->suivant) 
-    {
-        if(p->proc.TA<temp->proc.TA) 
-        {
-            pr=p->proc; 
-            p->proc=temp->proc; 
-            temp->proc=pr;
-        }
-    }
-}
-    }  
-      if(l!=NULL) //tester si ma lste est vide
-    {
-for(temp=l;temp->suivant!=NULL;temp=temp->suivant) 
-{
-  fin=fin+temp->proc.dureeExecution;  
-  temp->proc.TFin=fin;
-    temp->proc.TAttente=fin-temp->proc.TA-temp->proc.dureeExecution; 
-    printf("Nom: %s\t\t %u\t ms %u ms\t\n",temp->proc.name,temp->proc.TAttente,temp->proc.TFin);
-    } 
 
-} }
+
 
 Liste creerListe(char *arg)
 {
     FILE *fichier = fopen(arg, "r");
     char line[MAX_BUFFER_SIZE] = {0};
     if (fichier == NULL)
-    {
-        printf("no such fie exist");
-        exit(1);
+    { 
+        printf("can't open %s: %s\n", arg, strerror(errno));
+    exit(1);
+ 
     }
     while (fgets(line, sizeof(line), fichier) != NULL)
     {

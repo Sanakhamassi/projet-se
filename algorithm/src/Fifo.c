@@ -1,8 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../mainPR/traitement.h"
-void Fifo(Liste l)
-{
+#include "../../traitement.h"
+void Fifo(int argc, char *argv[])
+{  
+    printf("%s",argv[1]);
+    Liste l=creerListe(argv[1]);
     unsigned int fin = 0;
     Liste temp, p;
     PROCESS pr;
@@ -10,7 +12,7 @@ void Fifo(Liste l)
     if (l != NULL) //tester si ma liste est vide
     {
         for (temp = l; temp->suivant != NULL; temp = temp->suivant)
-        {
+        {    
             for (p = temp->suivant; p != NULL; p = p->suivant)
             {
                 if (p->proc.TA < temp->proc.TA)

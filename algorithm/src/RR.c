@@ -1,17 +1,17 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "../mainPR/traitement.h"
+#include "../../traitement.h"
 
 void RR(Liste l)
 {
-  Liste temp, p, pos;
+  Liste temp, p;
   PROCESS pr;
-  int i = 0, j = 0;
+  int i = 0;
   int curr_time = 0;
   int q;
-  int nb = NbrEmt(l);
+  int nb; 
+  nb=NbrEmt(l);
   int *Te_restant = (int *)malloc(sizeof(int) * nb);
-  PROCESS permut;
 
   //tri
   if (l != NULL) //tester si ma liste est vide
@@ -73,33 +73,34 @@ void RR(Liste l)
     int termine = 1; //indique si les processus ont terminé ou non
     if (l != NULL)   //tester si ma liste est vide
     {
-     int k;
-        for (temp = l ,k = 0; temp != NULL,k < nb;k++, temp = temp->suivant)
-        
+      //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
+      int k;
+      for (temp = l, k = 0; temp != NULL && k < nb; temp = temp->suivant, k++)
+
+      {
+
+        if ((Te_restant[k] > 0) && (temp->proc.TA <= curr_time))
+        {
+          termine = 0;
+
+          if (Te_restant[k] > q)
           {
-
-            if ((Te_restant[k] > 0) && (temp->proc.TA <= curr_time))
-            {
-              termine = 0;
-
-              if (Te_restant[k] > q)
-              {
-                curr_time += q;
-                Te_restant[k] -= q;
-                printf("%s\t\t %dms --> %dms\t\n", temp->proc.name, curr_time - q, curr_time);
-              }
-
-              else
-              {
-                curr_time += Te_restant[k];
-                temp->proc.TAttente = curr_time - temp->proc.dureeExecution;
-
-                printf("%s\t\t %dms --> %dms\t\n", temp->proc.name, curr_time - Te_restant[k], curr_time);
-                Te_restant[k] = 0;
-              }
-            }
+            curr_time += q;
+            Te_restant[k] -= q;
+            printf("%s\t\t %dms --> %dms\t\n", temp->proc.name, curr_time - q, curr_time);
           }
-        
+
+          else
+          {
+            curr_time += Te_restant[k];
+            temp->proc.TAttente = curr_time - temp->proc.dureeExecution;
+
+            printf("%s\t\t %dms --> %dms\t\n", temp->proc.name, curr_time - Te_restant[k], curr_time);
+            Te_restant[k] = 0;
+          }
+        }
+      }
+
       if (termine == 1)
         break;
     }

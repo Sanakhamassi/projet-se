@@ -1,12 +1,12 @@
 #include <stdio.h>
-#include "../mainPR/traitement.h"
+#include "../../traitement.h"
 void Priority_Calculate(Liste l)
 {
-    unsigned int fin = 0;
+   
     Liste temp, p, pos;
-    int tt = 0;
-    PROCESS pr;
-    PROCESS min;
+   
+   
+    
     int curr_time = 0;
     l->proc.completed = 1;
     l->proc.TFin = l->proc.dureeExecution;
@@ -38,7 +38,7 @@ void Priority_Calculate(Liste l)
             for (p = l; p != NULL; p = p->suivant)
             {
                 /* Search for processes with minimum priority */
-                if ((p->proc.completed == 0) && (p->proc.TA <= curr_time) && (p->proc.priorite < pos->proc.priorite))
+                if ((p->proc.completed == 0) && (p->proc.TA <= curr_time) && (p->proc.priorite > pos->proc.priorite))
                 {
                     pos = p;
                 }
@@ -62,7 +62,7 @@ void Priority_Calculate(Liste l)
 }
 void Priority(Liste l)
 {
-    int i;
+ 
     Liste temp, p;
     PROCESS pr;
 
